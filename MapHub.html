@@ -17,7 +17,7 @@ padding: 0;
 border-top: solid #e7ce00 medium;
 border-bottom: dotted #e7ce00 thin;
 width: 600px;
-color: #e7ce00;
+color: red;
 }
 
 p {
@@ -43,12 +43,12 @@ font-size: 80%;
 <script src="http://www.openlayers.org/api/2.7/OpenLayers.js" type="text/javascript"></script>
 <script type="text/javascript">
 var map;
-// Specify the georefrenced points obtained from the GIS for the area you wish to overlay.
+// Specify the georefrenced points obtained from the GIS for the area you wish to overlay.[Here it is SF,USA area]
 var mapBounds = new OpenLayers.Bounds( -123.206373267, 35.9299755863, -121.02714432, 39.5370459652);
 var mapMinZoom = 4; //minimum zoom level tileset available
 var mapMaxZoom = 12; // maximum zoom level tileset available [ beyond this the overlaid map won't be displayed]
 
-// avoid pink tiles
+// avoid generating pink tiles
 OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
 OpenLayers.Util.onImageLoadErrorColor = "transparent";
 
