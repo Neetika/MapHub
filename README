@@ -1,0 +1,10 @@
+The file" MapHub.html" contains the code for the Map Overlaying.
+If the overlaid map is not seen when you try to run the code locally on your machine,do the following steps:
+
+
+1. Create a Big folder where you can have sub folders of the maptilset (6 till 12) [i.e. the min and max tileset]
+2. Copy all the maptileset folders (all in one place)
+3. Place the MapHub.html in the big folder
+4. Now try to launch the MapHub.html from here. 
+
+If it still does not work, try to change the path locations according to your own settings, as mentioned in the code.
