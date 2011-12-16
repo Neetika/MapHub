@@ -45,7 +45,7 @@ font-size: 80%;
 var map;
 // Specify the georefrenced points obtained from the GIS for the area you wish to overlay.[Here it is SF,USA area]
 var mapBounds = new OpenLayers.Bounds( -123.206373267, 35.9299755863, -121.02714432, 39.5370459652);
-var mapMinZoom = 4; //minimum zoom level tileset available
+var mapMinZoom = 6; //minimum zoom level tileset available
 var mapMaxZoom = 12; // maximum zoom level tileset available [ beyond this the overlaid map won't be displayed]
 
 // avoid generating pink tiles
@@ -118,7 +118,7 @@ if (OpenLayers.Util.alphaHack() == false) { tmsoverlay.setOpacity(0.7); }
 var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
 
 //Add various Layers
-map.addLayers([gmap, gsat, ghyb, gter,osm,tmsoverlay, polygonLayer]);
+map.addLayers([gmap, gsat, ghyb, gter, osm, tmsoverlay, polygonLayer]);
 
 var switcherControl = new OpenLayers.Control.LayerSwitcher();
 map.addControl(switcherControl);
@@ -155,7 +155,7 @@ var z = this.map.getZoom();
 var limit = Math.pow(2, z);
 
 if (y < 0 || y >= limit) {
-return "file:///E:/Cornell-Fall_2011/MEngg_project/MEnggnone.png";
+return "file:///E:/Cornell-Fall_2011/MEngg_project/MEngg/none.png";
 } else {
 x = ((x % limit) + limit) % limit;
 return this.url + z + "/" + x + "/" + y + "." + this.type;
