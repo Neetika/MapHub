@@ -1,10 +1,30 @@
+MapHub : Map Overlay
+
+This is part of MEngg project.
+The goal of this project is to build extensions that allow the integration of Google Maps or Openstreetmaps with georeferenced and annotated historic map material. Users should have the possibility to go back and forth in time and view locations and user-contributed annotations on modern maps as well as on historic maps. 
+
+First of all, the user needs to select one historical map from the any of the services offering the Historical maps.
+
+Here the map has been chosen from the Europena server. It has a large collection of historical maps which have been tiled using Zoomify.
+
+For the usage of this project, only the raw image was selected from the Europena server and it was later tiled using magickTiler, one service which alolows tiling the maps in the desired format.
+
+Once the image has been tiled according to the zoom levels you desire to support and the format you desire, store it in one big folder.
+
+Now using the Georefrencer service, georeference the map to get a few boundary points, based on which you would like to overlay the historic map on top of the recent map. it is advisable to select minimum 6 points so that you have a good reference for the overlay boundary.
+Once the map has been georefrenced, select the GIS file and copy the points it offers.
+
+Now using the Maptiler service select the image of the map and click on georeference, and provide the points you just got from the GIS file.
+This would give you the boundary points you can use in the code ( var mapBounds ).
+
+
 The file" MapHub.html" contains the code for the Map Overlaying.
-If the overlaid map is not seen when you try to run the code locally on your machine,do the following steps:
+If the overlaid map is not seen when you try to run the code locally on your machine,try the following steps:
 
 
 1. Create a Big folder where you can have sub folders of the maptilset (6 till 12) [i.e. the min and max tileset]
 2. Copy all the maptileset folders (all in one place)
-3. Place the MapHub.html in the big folder
+3. Place the MapHub.html in the big folder along with the maptileset.
 4. Now try to launch the MapHub.html from here. 
 
-If it still does not work, try to change the path locations according to your own settings, as mentioned in the code.
+If it still does not work, try to change the path locations according to your own settings, wherever referenced in the code.
