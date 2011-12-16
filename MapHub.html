@@ -62,7 +62,7 @@ function onPopupClose(evt) {
 	            popup = new OpenLayers.Popup.FramedCloud("chicken",
 	                                     feature.geometry.getBounds().getCenterLonLat(),
 	                                     null,
-	                                     "<div style='font-size:.8em'>LatLong(Boundaries): " + feature.geometry.getBounds().getCenterLonLat() +"<br>Sample Annotation: " + feature.attributes.description+"</div>",
+	                                     "<div style='font-size:.8em'>Boundaries: " + feature.geometry.getBounds().getCenterLonLat() +"<br>Sample Annotation: " + feature.attributes.description+"</div>",
 	                                     null, true, onPopupClose);
 	            feature.popup = popup;
 	            map.addPopup(popup);
@@ -238,18 +238,18 @@ control.deactivate();
 <li>
     <input type="radio" name="type" value="none" id="noneToggle"
            onclick="toggleControl(this);" checked="checked" />
-    <label for="noneToggle">navigate</label>
+    <label for="noneToggle">Navigate the map</label>
 </li>
 <li>
 
     <input type="radio" name="type" value="polygon" id="polygonToggle"
            onclick="toggleControl(this);" />
-    <label for="polygonToggle">draw polygon</label>
+    <label for="polygonToggle">Draw Polygon for annotation area</label>
 </li>
 <li>
     <input type="radio" name="type" value="select" id="selectToggle"
            onclick="toggleControl(this);" />
-    <label for="selectToggle">select polygon on click</label>
+    <label for="selectToggle">Select polygon on click</label>
 </li>
 </ul>
 <script type="text/javascript" >resize()</script>
