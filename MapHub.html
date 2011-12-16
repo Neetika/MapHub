@@ -1,257 +1,257 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-		<html xmlns="http://www.w3.org/1999/xhtml">
-		  <head>
-		    <title>Map Hub</title>
-    		<meta name="author" content="Neetika Jain">
-		    <meta http-equiv='imagetoolbar' content='no'/>
-		    <style type="text/css" title="text/css">
-			        body {
-			            margin: 1em;
-			            font-family: Helvetica, Arial, sans-serif;
-			        }
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Map Hub</title>
+<meta name="author" content="Neetika Jain">
+<meta http-equiv='imagetoolbar' content='no'/>
+<style type="text/css" title="text/css">
+body {
+margin: 1em;
+font-family: Helvetica, Arial, sans-serif;
+}
 
-			        h1 {
-			            font: bold italic 2em/1em "Times New Roman", "MS Serif", "New York", serif;
-			            margin: 0;
-			            padding: 0;
-			            border-top: solid #e7ce00 medium;
-			            border-bottom: dotted #e7ce00 thin;
-			            width: 600px;
-			            color: #e7ce00;
-			        }
+h1 {
+font: bold italic 2em/1em "Times New Roman", "MS Serif", "New York", serif;
+margin: 0;
+padding: 0;
+border-top: solid #e7ce00 medium;
+border-bottom: dotted #e7ce00 thin;
+width: 600px;
+color: #e7ce00;
+}
 
-			        p {
-			            margin: 0;
-			        }
+p {
+margin: 0;
+}
 
-			        ul li {
-			            font-size: 80%;
-			        }
+ul li {
+font-size: 80%;
+}
 
-			        -->
-			    </style>
-
-			</head>
-			</body>
-
-			<h1>MapHub Project : Map Overlay</h1>
-
-			<div style="width: 100%; height: 500px; border: 1px solid black;" id="map"></div>
+-->
 </style>
 
-		    <script src='http://maps.google.com/maps?file=api&amp;v=2&amp' type='text/javascript'></script>
-		    <script src="http://www.openlayers.org/api/2.7/OpenLayers.js" type="text/javascript"></script>
-		    <script type="text/javascript">
-		        var map;
-		        // Specify the georefrenced points obtained from the GIS for the area you wish to overlay.
-			    var mapBounds = new OpenLayers.Bounds( -123.206373267, 35.9299755863, -121.02714432, 39.5370459652);
-			    var mapMinZoom = 4; //minimum zoom level tileset available
-				var mapMaxZoom = 12; // maximum zoom level tileset available [ beyond this the overlaid map won't be displayed]
+</head>
+</body>
 
-		        // avoid pink tiles
-		        OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
-		        OpenLayers.Util.onImageLoadErrorColor = "transparent";
+<h1>MapHub Project : Map Overlay</h1>
 
+<div style="width: 100%; height: 500px; border: 1px solid black;" id="map"></div>
+</style>
 
-				//function for Closing the annotation popup
-		          function onPopupClose(evt) {
-								            selectControl.unselect(selectedFeature);
-								        }
-								        function onFeatureSelect(feature) {
-								            selectedFeature = feature;
-								            popup = new OpenLayers.Popup.FramedCloud("chicken",
-								                                     feature.geometry.getBounds().getCenterLonLat(),
-								                                     null,
-								                                     "<div style='font-size:.8em'>LatLong(Boundaries): " + feature.geometry.getBounds().getCenterLonLat() +"<br>Sample Annotation: " + feature.attributes.description+"</div>",
-								                                     null, true, onPopupClose);
-								            feature.popup = popup;
-								            map.addPopup(popup);
-								        }
-								        function onFeatureUnselect(feature) {
-								            map.removePopup(feature.popup);
-								            feature.popup.destroy();
-								            feature.popup = null;
-        }
+<script src='http://maps.google.com/maps?file=api&amp;v=2&amp' type='text/javascript'></script>
+<script src="http://www.openlayers.org/api/2.7/OpenLayers.js" type="text/javascript"></script>
+<script type="text/javascript">
+var map;
+// Specify the georefrenced points obtained from the GIS for the area you wish to overlay.
+var mapBounds = new OpenLayers.Bounds( -123.206373267, 35.9299755863, -121.02714432, 39.5370459652);
+var mapMinZoom = 4; //minimum zoom level tileset available
+var mapMaxZoom = 12; // maximum zoom level tileset available [ beyond this the overlaid map won't be displayed]
+
+// avoid pink tiles
+OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
+OpenLayers.Util.onImageLoadErrorColor = "transparent";
 
 
-               //Initialize function
-
-		        function init(){
-	            var options = {
-	                controls: [],
-	                projection: new OpenLayers.Projection("EPSG:900913"),
-	                displayProjection: new OpenLayers.Projection("EPSG:4326"),
-	                units: "m",
-	                maxResolution: 156543.0339,
-	                maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34)
-		            };
-	            map = new OpenLayers.Map('map', options);
-
-	            // create Google Mercator layers
-	            var gmap = new OpenLayers.Layer.Google("Google Streets",
-					{ sphericalMercator: true, numZoomLevels: 20} );
-	            var gsat = new OpenLayers.Layer.Google("Google Satellite",
-					{type: G_SATELLITE_MAP, sphericalMercator: true, numZoomLevels: 20} );
-	            var ghyb = new OpenLayers.Layer.Google("Google Hybrid",
-					{type: G_HYBRID_MAP, sphericalMercator: true, numZoomLevels: 20});
-	            var gter = new OpenLayers.Layer.Google("Google Terrain",
-					{type: G_PHYSICAL_MAP, sphericalMercator: true, numZoomLevels: 20 });
-
-
-
-	            // create OSM layer
-	            var osm = new OpenLayers.Layer.TMS( "OpenStreetMap",
-	                "http://tile.openstreetmap.org/",
-	                { type: 'png', getURL: osm_getTileURL, displayOutsideMaxExtent: true,
-					  attribution: '<a href="http://www.openstreetmap.org/">OpenStreetMap</a>'} );
-
-
-	            // create TMS Overlay layer
-	            var tmsoverlay = new OpenLayers.Layer.TMS( "TMS Overlay", "",
-	                {   // url: 'file:///E:/Cornell-Fall_2011/MEngg_project/', serviceVersion: '.', layername: '.',
-						type: 'png', getURL: overlay_getTileURL, alpha: true,
-						isBaseLayer: false
-	                });
-				if (OpenLayers.Util.alphaHack() == false) { tmsoverlay.setOpacity(0.7); }
-
-				 //Create polygon layer
-	             var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
-
-				//Add various Layers
-	            map.addLayers([gmap, gsat, ghyb, gter,osm,tmsoverlay, polygonLayer]);
-
-	            var switcherControl = new OpenLayers.Control.LayerSwitcher();
-	            map.addControl(switcherControl);
-	            switcherControl.maximizeControl();
-
-	            map.zoomToExtent( mapBounds.transform(map.displayProjection, map.projection ) );
-
-	            selectControl = new OpenLayers.Control.SelectFeature(polygonLayer,
-				                {onSelect: onFeatureSelect, onUnselect: onFeatureUnselect});
-				            drawControls = {
-				                polygon: new OpenLayers.Control.DrawFeature(polygonLayer,
-				                            OpenLayers.Handler.Polygon),
-				                select: selectControl
-				            };
-
-				            for(var key in drawControls) {
-				                map.addControl(drawControls[key]);
-            }
-
-	            map.addControl(new OpenLayers.Control.PanZoomBar());
-	            map.addControl(new OpenLayers.Control.MousePosition());
-	            map.addControl(new OpenLayers.Control.MouseDefaults());
-	            map.addControl(new OpenLayers.Control.KeyboardDefaults());
+//function for Closing the annotation popup
+function onPopupClose(evt) {
+	            selectControl.unselect(selectedFeature);
 	        }
+	        function onFeatureSelect(feature) {
+	            selectedFeature = feature;
+	            popup = new OpenLayers.Popup.FramedCloud("chicken",
+	                                     feature.geometry.getBounds().getCenterLonLat(),
+	                                     null,
+	                                     "<div style='font-size:.8em'>LatLong(Boundaries): " + feature.geometry.getBounds().getCenterLonLat() +"<br>Sample Annotation: " + feature.attributes.description+"</div>",
+	                                     null, true, onPopupClose);
+	            feature.popup = popup;
+	            map.addPopup(popup);
+	        }
+	        function onFeatureUnselect(feature) {
+	            map.removePopup(feature.popup);
+	            feature.popup.destroy();
+	            feature.popup = null;
+}
+
+
+//Initialize function
+
+function init(){
+var options = {
+controls: [],
+projection: new OpenLayers.Projection("EPSG:900913"),
+displayProjection: new OpenLayers.Projection("EPSG:4326"),
+units: "m",
+maxResolution: 156543.0339,
+maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34)
+};
+map = new OpenLayers.Map('map', options);
+
+// create Google Mercator layers
+var gmap = new OpenLayers.Layer.Google("Google Streets",
+{ sphericalMercator: true, numZoomLevels: 20} );
+var gsat = new OpenLayers.Layer.Google("Google Satellite",
+{type: G_SATELLITE_MAP, sphericalMercator: true, numZoomLevels: 20} );
+var ghyb = new OpenLayers.Layer.Google("Google Hybrid",
+{type: G_HYBRID_MAP, sphericalMercator: true, numZoomLevels: 20});
+var gter = new OpenLayers.Layer.Google("Google Terrain",
+{type: G_PHYSICAL_MAP, sphericalMercator: true, numZoomLevels: 20 });
+
+
+
+// create OSM layer
+var osm = new OpenLayers.Layer.TMS( "OpenStreetMap",
+"http://tile.openstreetmap.org/",
+{ type: 'png', getURL: osm_getTileURL, displayOutsideMaxExtent: true,
+attribution: '<a href="http://www.openstreetmap.org/">OpenStreetMap</a>'} );
+
+
+// create TMS Overlay layer
+var tmsoverlay = new OpenLayers.Layer.TMS( "TMS Overlay", "",
+{   // url: 'file:///E:/Cornell-Fall_2011/MEngg_project/', serviceVersion: '.', layername: '.',
+type: 'png', getURL: overlay_getTileURL, alpha: true,
+isBaseLayer: false
+});
+if (OpenLayers.Util.alphaHack() == false) { tmsoverlay.setOpacity(0.7); }
+
+//Create polygon layer
+var polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
+
+//Add various Layers
+map.addLayers([gmap, gsat, ghyb, gter,osm,tmsoverlay, polygonLayer]);
+
+var switcherControl = new OpenLayers.Control.LayerSwitcher();
+map.addControl(switcherControl);
+switcherControl.maximizeControl();
+
+map.zoomToExtent( mapBounds.transform(map.displayProjection, map.projection ) );
+
+selectControl = new OpenLayers.Control.SelectFeature(polygonLayer,
+{onSelect: onFeatureSelect, onUnselect: onFeatureUnselect});
+drawControls = {
+polygon: new OpenLayers.Control.DrawFeature(polygonLayer,
+    OpenLayers.Handler.Polygon),
+select: selectControl
+};
+
+for(var key in drawControls) {
+map.addControl(drawControls[key]);
+}
+
+map.addControl(new OpenLayers.Control.PanZoomBar());
+map.addControl(new OpenLayers.Control.MousePosition());
+map.addControl(new OpenLayers.Control.MouseDefaults());
+map.addControl(new OpenLayers.Control.KeyboardDefaults());
+}
 
 
 //Function for base maps
 
-	        function osm_getTileURL(bounds) {
-	            var res = this.map.getResolution();
-	            var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
-	            var y = Math.round((this.maxExtent.top - bounds.top) / (res * this.tileSize.h));
-	            var z = this.map.getZoom();
-	            var limit = Math.pow(2, z);
+function osm_getTileURL(bounds) {
+var res = this.map.getResolution();
+var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
+var y = Math.round((this.maxExtent.top - bounds.top) / (res * this.tileSize.h));
+var z = this.map.getZoom();
+var limit = Math.pow(2, z);
 
-	            if (y < 0 || y >= limit) {
-	                return "file:///E:/Cornell-Fall_2011/MEngg_project/MEnggnone.png";
-	            } else {
-	                x = ((x % limit) + limit) % limit;
-	                return this.url + z + "/" + x + "/" + y + "." + this.type;
-	            }
-	        }
+if (y < 0 || y >= limit) {
+return "file:///E:/Cornell-Fall_2011/MEngg_project/MEnggnone.png";
+} else {
+x = ((x % limit) + limit) % limit;
+return this.url + z + "/" + x + "/" + y + "." + this.type;
+}
+}
 
 //Function for the  Map Overlaying
 
-	        function overlay_getTileURL(bounds) {
-	            var res = this.map.getResolution();
-	            var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
-	            var y = Math.round((bounds.bottom - this.tileOrigin.lat) / (res * this.tileSize.h));
-	            var z = this.map.getZoom();
-	            if (this.map.baseLayer.name == 'Virtual Earth Roads' || this.map.baseLayer.name == 'Virtual Earth Aerial' || this.map.baseLayer.name == 'Virtual Earth Hybrid') {
-	               z = z + 1;
-	            }
-		        if (mapBounds.intersectsBounds( bounds ) && z >= mapMinZoom && z <= mapMaxZoom ) {
-	               //console.log( this.url + z + "/" + x + "/" + y + "." + this.type);
-	               return this.url + z + "/" + x + "/" + y + "." + this.type;
-                } else {
-                   return "http://www.maptiler.org/img/none.png";
-                }
-	        }
+function overlay_getTileURL(bounds) {
+var res = this.map.getResolution();
+var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
+var y = Math.round((bounds.bottom - this.tileOrigin.lat) / (res * this.tileSize.h));
+var z = this.map.getZoom();
+if (this.map.baseLayer.name == 'Virtual Earth Roads' || this.map.baseLayer.name == 'Virtual Earth Aerial' || this.map.baseLayer.name == 'Virtual Earth Hybrid') {
+z = z + 1;
+}
+if (mapBounds.intersectsBounds( bounds ) && z >= mapMinZoom && z <= mapMaxZoom ) {
+//console.log( this.url + z + "/" + x + "/" + y + "." + this.type);
+return this.url + z + "/" + x + "/" + y + "." + this.type;
+} else {
+return "http://www.maptiler.org/img/none.png";
+}
+}
 
 //Function for finding the Window Height where the map would be displayed.
 
-		   function getWindowHeight() {
-		        if (self.innerHeight) return self.innerHeight;
-		        if (document.documentElement && document.documentElement.clientHeight)
-		            return document.documentElement.clientHeight;
-		        if (document.body) return document.body.clientHeight;
-			        return 0;
-		    }
+function getWindowHeight() {
+if (self.innerHeight) return self.innerHeight;
+if (document.documentElement && document.documentElement.clientHeight)
+return document.documentElement.clientHeight;
+if (document.body) return document.body.clientHeight;
+return 0;
+}
 
-		    //Function for finding the Window Width where the map would be displayed.
+//Function for finding the Window Width where the map would be displayed.
 
-		    function getWindowWidth() {
-			    if (self.innerWidth) return self.innerWidth;
-			    if (document.documentElement && document.documentElement.clientWidth)
-			        return document.documentElement.clientWidth;
-			    if (document.body) return document.body.clientWidth;
-			        return 0;
-		    }
+function getWindowWidth() {
+if (self.innerWidth) return self.innerWidth;
+if (document.documentElement && document.documentElement.clientWidth)
+return document.documentElement.clientWidth;
+if (document.body) return document.body.clientWidth;
+return 0;
+}
 
 
 //Function for finding map resizing
 
-		    function resize() {
-			    var map = document.getElementById("map");
-			    var header = document.getElementById("header");
-			    var subheader = document.getElementById("subheader");
-			   map.style.height = (getWindowHeight()-80) + "px";
-			   map.style.width = (getWindowWidth()-20) + "px";
-			    // header.style.width = (getWindowWidth()-20) + "px";
-			    // subheader.style.width = (getWindowWidth()-20) + "px";
-				if (map.updateSize) { map.updateSize(); };
-		    }
+function resize() {
+var map = document.getElementById("map");
+var header = document.getElementById("header");
+var subheader = document.getElementById("subheader");
+map.style.height = (getWindowHeight()-80) + "px";
+map.style.width = (getWindowWidth()-20) + "px";
+// header.style.width = (getWindowWidth()-20) + "px";
+// subheader.style.width = (getWindowWidth()-20) + "px";
+if (map.updateSize) { map.updateSize(); };
+}
 
-		    onresize=function(){ resize(); };
+onresize=function(){ resize(); };
 
-		    //Function for toggling between the 3 radio buttons.
+//Function for toggling between the 3 radio buttons.
 
-			function toggleControl(element) {
-            for(key in drawControls) {
-                var control = drawControls[key];
-                if(element.value == key && element.checked) {
-                    control.activate();
-                } else {
-                    control.deactivate();
-                }
-            }
-        }
+function toggleControl(element) {
+for(key in drawControls) {
+var control = drawControls[key];
+if(element.value == key && element.checked) {
+control.activate();
+} else {
+control.deactivate();
+}
+}
+}
 
-		      </script>
-					  </head>
-					  <body onload="init()">
+</script>
+</head>
+<body onload="init()">
 
-						<div id="map"></div>
-						<ul id="controlToggle">
-						        <li>
-						            <input type="radio" name="type" value="none" id="noneToggle"
-						                   onclick="toggleControl(this);" checked="checked" />
-						            <label for="noneToggle">navigate</label>
-						        </li>
-						        <li>
+<div id="map"></div>
+<ul id="controlToggle">
+<li>
+    <input type="radio" name="type" value="none" id="noneToggle"
+           onclick="toggleControl(this);" checked="checked" />
+    <label for="noneToggle">navigate</label>
+</li>
+<li>
 
-						            <input type="radio" name="type" value="polygon" id="polygonToggle"
-						                   onclick="toggleControl(this);" />
-						            <label for="polygonToggle">draw polygon</label>
-						        </li>
-						        <li>
-						            <input type="radio" name="type" value="select" id="selectToggle"
-						                   onclick="toggleControl(this);" />
-						            <label for="selectToggle">select polygon on click</label>
-						        </li>
-			    </ul>
-					    <script type="text/javascript" >resize()</script>
-					  </body>
-		</html>
+    <input type="radio" name="type" value="polygon" id="polygonToggle"
+           onclick="toggleControl(this);" />
+    <label for="polygonToggle">draw polygon</label>
+</li>
+<li>
+    <input type="radio" name="type" value="select" id="selectToggle"
+           onclick="toggleControl(this);" />
+    <label for="selectToggle">select polygon on click</label>
+</li>
+</ul>
+<script type="text/javascript" >resize()</script>
+</body>
+</html>
